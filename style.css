@@ -32,8 +32,9 @@ body {
 .hero .btn {
   border-radius: 30px;
 }
-.hero-img {
-  border: 5px solid var(--cream);
+.hero img {
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* ======== KATEGORI CARD ======== */
@@ -105,6 +106,15 @@ body {
   background-color: var(--warmred);
   border-radius: 8px;
 }
+
+.portofolio-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.5rem;
+  color: #A34740;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 
 /* Footer */
 footer {
