@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keranjang | Hanania Katering</title>
+
+    <!-- Bootstrap CSS (Offline) -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Font Google -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-3">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+          <img
+            src="img/logo hanania.jpg"
+            alt="Logo Bisnis"
+            height="45"
+            class="me-2"
+          />
+          <strong>Hanania Katering</strong>
+        </a>
+        <button
+          class="navbar-toggler"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav gap-3">
+            <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+            <li class="nav-item"><a class="nav-link" href="menu.html">Menu Katering</a></li>
+            <li class="nav-item"><a class="nav-link active" href="keranjang.html">Keranjang</a></li>
+            <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
+            <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ==================== KERANJANG ==================== -->
+    <section class="keranjang py-5">
+      <div class="container">
+        <h2 class="fw-bold mb-4 text-center">Keranjang Pesanan Anda</h2>
+
+        <!-- TABEL KERANJANG -->
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-dark text-center">
+              <tr>
+                <th>No</th>
+                <th>Nama Menu</th>
+                <th>Jumlah</th>
+                <th>Harga Satuan</th>
+                <th>Subtotal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="cart-items">
+              <!-- Contoh item -->
+              <tr>
+                <td>1</td>
+                <td>Nasi Box Ayam Bakar</td>
+                <td>
+                  <input type="number" class="form-control text-center" value="1" min="1" />
+                </td>
+                <td>Rp25.000</td>
+                <td>Rp25.000</td>
+                <td class="text-center">
+                  <button class="btn btn-danger btn-sm">Hapus</button>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Tumpeng Mini</td>
+                <td>
+                  <input type="number" class="form-control text-center" value="2" min="1" />
+                </td>
+                <td>Rp50.000</td>
+                <td>Rp100.000</td>
+                <td class="text-center">
+                  <button class="btn btn-danger btn-sm">Hapus</button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="4" class="text-end">Total:</th>
+                <th colspan="2" id="total-harga">Rp125.000</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- TOMBOL AKSI -->
+        <div class="d-flex justify-content-between mt-4">
+          <a href="menu.html" class="btn btn-secondary px-4">← Kembali ke Menu</a>
+          <a href="checkout.html" class="btn btn-hanania px-4 fw-semibold">Lanjut ke Konfirmasi Pesanan →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="text-center py-4 text-light">
+      <small>© 2025 Hanania Katering. All Rights Reserved.</small>
+    </footer>
+
+    <!-- Bootstrap JS (Offline) -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+      // Contoh sederhana update total harga
+      const inputs = document.querySelectorAll('input[type="number"]');
+      const totalHarga = document.getElementById("total-harga");
+
+      inputs.forEach(input => {
+        input.addEventListener("change", updateTotal);
+      });
+
+      function updateTotal() {
+        let total = 0;
+        const rows = document.querySelectorAll("#cart-items tr");
+        rows.forEach(row => {
+          const qty = parseInt(row.querySelector("input").value);
+          const hargaText = row.children[3].innerText.replace("Rp", "").replace(".", "").trim();
+          const harga = parseInt(hargaText);
+          const subtotal = qty * harga;
+          row.children[4].innerText = "Rp" + subtotal.toLocaleString("id-ID");
+          total += subtotal;
+        });
+        totalHarga.innerText = "Rp" + total.toLocaleString("id-ID");
+      }
+    </script>
+  </body>
+</html>
