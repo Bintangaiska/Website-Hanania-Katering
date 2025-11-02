@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Dashboard & Laporan</title>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-cream">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-dark" style="background-color:#A34740;">
+    <div class="container">
+      <a class="navbar-brand fw-bold">Admin Panel - Dashboard & Laporan</a>
+    </div>
+  </nav>
+
+  <!-- KONTEN -->
+  <div class="container py-5">
+    <h3 class="fw-bold text-bata mb-4 text-center">Laporan Penjualan Hanania Catering</h3>
+
+    <!-- CARD STATISTIK -->
+    <div class="row g-4 mb-4 text-center">
+      <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-0">
+          <h5 class="text-bata">Total Pesanan</h5>
+          <h2 id="totalPesanan" class="fw-bold">0</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-0">
+          <h5 class="text-bata">Pendapatan Total</h5>
+          <h2 id="totalPendapatan" class="fw-bold">Rp0</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-0">
+          <h5 class="text-bata">Pesanan Selesai</h5>
+          <h2 id="pesananSelesai" class="fw-bold">0</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAFIK PENJUALAN -->
+    <div class="card p-4 shadow-sm border-0 mb-4">
+      <h5 class="fw-bold mb-3 text-center text-bata">Grafik Menu Terlaris</h5>
+      <canvas id="menuChart" height="150"></canvas>
+    </div>
+
+    <div class="card p-4 shadow-sm border-0">
+      <h5 class="fw-bold mb-3 text-center text-bata">Grafik Status Pesanan</h5>
+      <canvas id="statusChart" height="150"></canvas>
+    </div>
+  </div>
+
+  <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Ambil data pesanan dari localStorage
+    const pesananList = JSON.parse(localStorage.getItem("pesananList") || "[]");
+
+    // Hitung total pesanan
+    const totalPesanan = pesananList.length;
+
+    // Hitung pendapatan total
+    const totalPendapatan = pesananList.reduce((sum, p) => sum + Number(p.total || 0), 0);
+
+    // Hitung pesanan selesai
+    const pesananSelesai = pesananList.filter(p => p.status === "Selesai").length;
+
+    // Tampilkan ke card
+    document.getElementById("totalPesanan").textContent = totalPesanan;
+    document.getElementById("totalPendapatan").textContent = "Rp" + totalPendapatan.toLocaleString();
+    document.getElementById("pesananSelesai").textContent = pesananSelesai;
+
+    // Hitung menu terlaris
+    const menuCounter = {};
+    pesananList.forEach(p => {
+      menuCounter[p.menu] = (menuCounter[p.menu] || 0) + Number(p.jumlah || 0);
+    });
+    const menuLabels = Object.keys(menuCounter);
+    const menuData = Object.values(menuCounter);
+
+    // Buat grafik menu terlaris
+    new Chart(document.getElementById("menuChart"), {
+      type: "bar",
+      data: {
+        labels: menuLabels,
+        datasets: [{
+          label: "Jumlah Terjual",
+          data: menuData,
+          backgroundColor: "#A34740"
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: false }
+        }
+      }
+    });
+
+    // Hitung status pesanan
+    const statusCount = { Diproses: 0, Dikirim: 0, Selesai: 0 };
+    pesananList.forEach(p => statusCount[p.status] = (statusCount[p.status] || 0) + 1);
+
+    // Buat grafik status pesanan
+    new Chart(document.getElementById("statusChart"), {
+      type: "doughnut",
+      data: {
+        labels: Object.keys(statusCount),
+        datasets: [{
+          data: Object.values(statusCount),
+          backgroundColor: ["#C65C55", "#F2A65A", "#5CB85C"]
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: "bottom" }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

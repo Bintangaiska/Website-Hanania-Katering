@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Manajemen Menu</title>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-dark" style="background-color:#A34740;">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Admin Panel - Manajemen Menu</a>
+    </div>
+  </nav>
+
+  <!-- KONTEN -->
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="fw-bold text-bata">Daftar Menu Hanania Catering</h4>
+      <button class="btn btn-hanania" onclick="tambahMenu()">+ Tambah Menu</button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered text-center align-middle" id="menuTable">
+        <thead class="table-danger">
+          <tr>
+            <th>No</th>
+            <th>Nama Menu</th>
+            <th>Harga</th>
+            <th>Kategori</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Ambil data menu dari localStorage (jika ada)
+    let menuList = JSON.parse(localStorage.getItem("menuList") || "[]");
+    const table = document.querySelector("#menuTable tbody");
+
+    // Fungsi render tabel
+    function render() {
+      table.innerHTML = "";
+      if (menuList.length === 0) {
+        table.innerHTML = `<tr><td colspan="5" class="text-muted">Belum ada data menu</td></tr>`;
+        return;
+      }
+      menuList.forEach((menu, index) => {
+        table.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${menu.nama}</td>
+            <td>Rp${menu.harga}</td>
+            <td>${menu.kategori}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-1" onclick="editMenu(${index})">Edit</button>
+              <button class="btn btn-sm btn-outline-danger" onclick="hapusMenu(${index})">Hapus</button>
+            </td>
+          </tr>`;
+      });
+    }
+
+    // Tambah menu baru
+    function tambahMenu() {
+      const nama = prompt("Nama menu:");
+      const harga = prompt("Harga menu (angka saja):");
+      const kategori = prompt("Kategori (Makanan / Minuman / Snack / Tumpeng):");
+
+      if (nama && harga && kategori) {
+        menuList.push({ nama, harga, kategori });
+        localStorage.setItem("menuList", JSON.stringify(menuList));
+        render();
+        alert("Menu berhasil ditambahkan!");
+      }
+    }
+
+    // Edit menu
+    function editMenu(index) {
+      const menu = menuList[index];
+      const namaBaru = prompt("Ubah nama menu:", menu.nama);
+      const hargaBaru = prompt("Ubah harga menu:", menu.harga);
+      const kategoriBaru = prompt("Ubah kategori:", menu.kategori);
+
+      if (namaBaru && hargaBaru && kategoriBaru) {
+        menuList[index] = { nama: namaBaru, harga: hargaBaru, kategori: kategoriBaru };
+        localStorage.setItem("menuList", JSON.stringify(menuList));
+        render();
+        alert("Menu berhasil diperbarui!");
+      }
+    }
+
+    // Hapus menu
+    function hapusMenu(index) {
+      if (confirm("Yakin ingin menghapus menu ini?")) {
+        menuList.splice(index, 1);
+        localStorage.setItem("menuList", JSON.stringify(menuList));
+        render();
+        alert("Menu dihapus!");
+      }
+    }
+
+    render();
+  </script>
+
+</body>
+</html>

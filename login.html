@@ -28,5 +28,58 @@
 </section>
 
 <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Hanania Katering</title>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-cream">
+
+<section class="d-flex align-items-center justify-content-center vh-100">
+  <div class="card p-4 shadow-lg" style="width: 350px;">
+    <h4 class="fw-bold text-center mb-4 text-bata">Login Akun</h4>
+    <form id="loginForm">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="text" id="email" class="form-control" placeholder="Email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-hanania w-100">Masuk</button>
+      <p class="text-center small mt-3 text-muted">
+        Belum punya akun? <a href="register.html">Daftar</a>
+      </p>
+    </form>
+  </div>
+</section>
+
+<script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById("loginForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const found = users.find(u => (u.email === email) && u.password === password);
+
+    if (found) {
+      alert("Selamat datang, " + found.nama + "!");
+      localStorage.setItem("loggedUser", JSON.stringify(found));
+      window.location.href = "index.html";
+    } else {
+      alert("Email atau password salah!");
+    }
+  });
+</script>
+</body>
+</html>
+
 </body>
 </html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Manajemen Pesanan</title>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-dark" style="background-color:#A34740;">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Admin Panel - Manajemen Pesanan</a>
+    </div>
+  </nav>
+
+  <!-- ISI KONTEN -->
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="fw-bold text-bata">Daftar Pesanan Pelanggan</h4>
+      <button class="btn btn-hanania" onclick="tambahPesanan()">+ Tambah Pesanan</button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered text-center align-middle" id="pesananTable">
+        <thead class="table-danger">
+          <tr>
+            <th>No</th>
+            <th>Nama Pelanggan</th>
+            <th>Menu</th>
+            <th>Jumlah</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Ambil data pesanan dari localStorage
+    let pesananList = JSON.parse(localStorage.getItem("pesananList") || "[]");
+    const table = document.querySelector("#pesananTable tbody");
+
+    // Render tabel pesanan
+    function render() {
+      table.innerHTML = "";
+      if (pesananList.length === 0) {
+        table.innerHTML = `<tr><td colspan="7" class="text-muted">Belum ada data pesanan</td></tr>`;
+        return;
+      }
+
+      pesananList.forEach((p, index) => {
+        table.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${p.nama}</td>
+            <td>${p.menu}</td>
+            <td>${p.jumlah}</td>
+            <td>Rp${p.total}</td>
+            <td>
+              <select class="form-select form-select-sm" onchange="ubahStatus(${index}, this.value)">
+                <option ${p.status === "Diproses" ? "selected" : ""}>Diproses</option>
+                <option ${p.status === "Dikirim" ? "selected" : ""}>Dikirim</option>
+                <option ${p.status === "Selesai" ? "selected" : ""}>Selesai</option>
+              </select>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-danger" onclick="hapusPesanan(${index})">Hapus</button>
+            </td>
+          </tr>`;
+      });
+    }
+
+    // Tambah pesanan (simulasi)
+    function tambahPesanan() {
+      const nama = prompt("Nama pelanggan:");
+      const menu = prompt("Menu yang dipesan:");
+      const jumlah = prompt("Jumlah pesanan:");
+      const total = prompt("Total harga (angka saja):");
+
+      if (nama && menu && jumlah && total) {
+        pesananList.push({
+          nama, menu, jumlah, total,
+          status: "Diproses"
+        });
+        localStorage.setItem("pesananList", JSON.stringify(pesananList));
+        render();
+        alert("Pesanan baru ditambahkan!");
+      }
+    }
+
+    // Ubah status pesanan
+    function ubahStatus(index, statusBaru) {
+      pesananList[index].status = statusBaru;
+      localStorage.setItem("pesananList", JSON.stringify(pesananList));
+      alert("Status pesanan diperbarui menjadi: " + statusBaru);
+    }
+
+    // Hapus pesanan
+    function hapusPesanan(index) {
+      if (confirm("Yakin ingin menghapus pesanan ini?")) {
+        pesananList.splice(index, 1);
+        localStorage.setItem("pesananList", JSON.stringify(pesananList));
+        render();
+        alert("Pesanan dihapus!");
+      }
+    }
+
+    // Render awal
+    render();
+  </script>
+
+</body>
+</html>
