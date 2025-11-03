@@ -119,6 +119,10 @@ body {
 /* Footer */
 footer {
   background-color: var(--warmred);
+  margin-top: auto;
+  text-align: center;
+ /* mt-auto text-center py-4 text-light;  padding: ;
+  */
 }
 
 /* Animasi Scroll */
